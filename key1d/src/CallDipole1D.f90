@@ -42,6 +42,8 @@
 ! Scripps Institution of Oceanography
 ! kkey@ucsd.edu
 !
+    use dipole1d
+
     implicit none
 
     integer :: nTx, nFreq
@@ -54,37 +56,43 @@
     character(120)  :: outputfilename, sRunfile
     
     integer,parameter :: derivoutfileunit = 17
-    
-    end module runfile
 
+contains
 
-!==============================================================================!
-!========================================================! Program CallDipole1D 
-!==============================================================================!
-!
-! Program that reads in a runfile and then calls Dipole1D subroutine to 
-! compute CSEM fields from an arbitrarily oriented electric dipole.
-!
-! Version 1.1   February 27, 2008   Switched get_time_offset to use get_time_offset subroutine
-!                                   Added in flexible format for reading RUNFILE
-! Version 1.0   Fall, 2007
-!
-! Kerry Key
-! Scripps Institution of Oceanography
-! kkey@ucsd.edu
-!
-!==============================================================================!
 subroutine c_initialiseDpl1D(linversion) bind(c)
 
     use iso_c_binding, only: c_bool
 
-    logical(c_bool), intent(in) :: linversion   
+    logical(c_bool), intent(in) :: linversion
+    integer :: i
 
 !
 ! Initialize the default values, can be overidden with values in RUNFILE
 !
    call init_defaults_Dipole1D
    call init_defaults
+
+! DGM 10/2010 Allow command line arguments for the in & out filenames
+! Note that the input filename allows an "Output FileName: xxxx" entry
+! which will override the command line, if present.
+   i = command_argument_count()
+   if( i > 0 ) then
+      call get_command_argument(1,sRunfile)
+
+      if( i > 1 ) then
+         call get_command_argument(1,outputfilename)
+       else
+! If an input name was specified, but no output name
+! then use the input name but change the extension
+! to '.csem'
+          i = index( sRunfile, '.' )
+          if( i == 0 ) then
+             outputfilename = sRunfile // '.csem'
+          else
+             outputfilename = sRunfile(1:i-1) // '.csem'
+        endif
+      endif
+   endif
 
 ! Read in the runfile
 !
@@ -100,6 +108,46 @@ subroutine c_initialiseDpl1D(linversion) bind(c)
     endif
 
 end subroutine c_initialiseDpl1D
+
+!==============================================================================!
+!===============================================================! init_defaults
+!==============================================================================!
+subroutine init_defaults
+
+use dipole1d     ! Model parameters are passed in here, fields passed out here
+!
+! Specify some parameters required by Dipole1D:
+!
+sRunfile        = 'RUNFILE'
+outputfilename  = 'dipole1Doutput.csem'
+HTmethod1D      = 'kk_ht_201'
+outputdomain1D  = 'spatial'
+lbcomp          = .true.
+sdm1D           = 1.0   ! (Am), dipole moment
+lUseSpline1D    = .false.
+linversion      = .false. ! Compute Derivatives with respect to sigma(layers)
+
+
+end subroutine init_defaults
+
+end module runfile
+
+!==============================================================================!
+!========================================================! Program CallDipole1D
+!==============================================================================!
+!
+! Program that reads in a runfile and then calls Dipole1D subroutine to
+! compute CSEM fields from an arbitrarily oriented electric dipole.
+!
+! Version 1.1   February 27, 2008   Switched get_time_offset to use get_time_offset subroutine
+!                                   Added in flexible format for reading RUNFILE
+! Version 1.0   Fall, 2007
+!
+! Kerry Key
+! Scripps Institution of Oceanography
+! kkey@ucsd.edu
+!
+!==============================================================================!
 
 !==============================================================================!    
 !===============================================================! c_CallDipole1D
@@ -117,27 +165,7 @@ subroutine c_CallDipole1D(iTx,iFreq, iRxlayer) bind(c)
     integer               :: i,j
     real(8)               :: t0, t1 ! timing variables
     
-    ! DGM 10/2010 Allow command line arguments for the in & out filenames
-    ! Note that the input filename allows an "Output FileName: xxxx" entry
-    ! which will override the command line, if present.
-    i = command_argument_count()
-    if( i > 0 ) then
-        call get_command_argument(1,sRunfile)
-        
-        if( i > 1 ) then
-            call get_command_argument(1,outputfilename)
-        else
-            ! If an input name was specified, but no output name
-            ! then use the input name but change the extension
-            ! to '.csem'
-            i = index( sRunfile, '.' )
-            if( i == 0 ) then
-                outputfilename = sRunfile // '.csem'
-            else
-                outputfilename = sRunfile(1:i-1) // '.csem'
-            endif
-        endif
-    endif
+
 !
 ! Start the get_time_offset:
 !
@@ -240,28 +268,7 @@ subroutine c_CallDipole1D(iTx,iFreq, iRxlayer) bind(c)
 ! Hasta la vista baby
 !
 end subroutine c_CallDipole1D
-  
-!==============================================================================!    
-!===============================================================! init_defaults 
-!==============================================================================!
-    subroutine init_defaults 
-    
-    use runfile
-    use dipole1d     ! Model parameters are passed in here, fields passed out here
-!
-! Specify some parameters required by Dipole1D:
-!
-    sRunfile        = 'RUNFILE'
-    outputfilename  = 'dipole1Doutput.csem'
-    HTmethod1D      = 'kk_ht_201' 
-    outputdomain1D  = 'spatial'
-    lbcomp          = .true.
-    sdm1D           = 1.0   ! (Am), dipole moment 
-    lUseSpline1D    = .false.
-    linversion      = .false. ! Compute Derivatives with respect to sigma(layers)
-    
-    
-    end subroutine init_defaults 
+
   
 !==============================================================================!    
 !=============================================================! get_time_offset

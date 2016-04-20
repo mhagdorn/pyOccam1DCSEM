@@ -16,6 +16,7 @@ class build_(build):
                		_build.run(self)
             	else:
 			chdir("key1d")
+			system("glibtoolize")
 			system("aclocal")
 			system("autoconf")
 			system("automake --add-missing")

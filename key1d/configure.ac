@@ -3,9 +3,12 @@
 
 AC_PREREQ([2.69])
 AC_INIT(occam1dcsem,7.3,isloux@yahoo.co.uk )
+AC_ENABLE_SHARED
+AC_PROG_LIBTOOL
 AM_INIT_AUTOMAKE
 AC_PROG_FC
-AC_PROG_RANLIB
+AC_PROG_CXX
+AC_CONFIG_MACRO_DIRS([m4])
 
 # Checks for programs.
 
