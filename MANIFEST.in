@@ -1,0 +1,4 @@
+include LICENSE
+recursive-include key *.am
+recursive-include key/src *.f90
+include key/configure.ac
