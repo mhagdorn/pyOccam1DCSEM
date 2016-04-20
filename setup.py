@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from numpy.distutils.core import setup
+from distutils.core import setup
 from distutils.command.build import build as _build
 from distutils.command.build import build
 from os import system,chdir
@@ -27,8 +27,9 @@ setup(
 	name='Key1d',
 	version=__version__,
 	packages=['key1d'],
-	author='Christophe Ramananjaona',
-	author_email='isloux@yahoo.co.uk',
+	author='Kerry Key, Christophe Ramananjaona',
+	author_email='isloux AT yahoo.co.uk',
+	url='https://github.com/isloux/Key1d',
 	license='GNU General Public License v3',
 	long_description=open('README.txt').read(),
 	classifiers=["Programming Language :: Python",
