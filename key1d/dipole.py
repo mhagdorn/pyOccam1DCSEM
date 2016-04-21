@@ -18,7 +18,7 @@ class Dipole:
 def main():
     libpath="/Users/christophe/Documents/Informatique/Python/Key1d/key1d/lib/"
     dpl=Dipole(libpath)
-    dpl.callDipole1d(libpath)
+    dpl.callDipole1d()
 
 if __name__=="__main__":
     main()
