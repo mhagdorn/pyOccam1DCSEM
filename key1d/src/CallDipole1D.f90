@@ -59,7 +59,7 @@
 
 contains
 
-subroutine c_initialiseDpl1D(linversion) bind(c)
+subroutine c_initialiseDpl1D(linversion) bind(c, name="c_initialiseDpl1D")
 
     use iso_c_binding, only: c_bool
 
@@ -152,7 +152,7 @@ end module runfile
 !==============================================================================!    
 !===============================================================! c_CallDipole1D
 !==============================================================================!
-subroutine c_CallDipole1D(iTx,iFreq, iRxlayer) bind(c)
+subroutine c_CallDipole1D(iTx,iFreq, iRxlayer) bind(c, name="c_CallDipole1D")
     
     use dipole1d     ! Model parameters are passed in here, fields passed out here
     use runfile      ! This stores the info read in from the RUNFILE
