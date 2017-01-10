@@ -1,31 +1,49 @@
 #!/usr/bin/env python
 
 from distutils.core import setup, Extension
-from distutils.command.build import build as _build
 from distutils.command.build import build
+from distutils.command.install import install
+from distutils.command.clean import clean
 from os import system,chdir
 import sys
+import re
 from key1d import __version__
 
-class build_(build):
+class configure(install):
     def run(self):
-        caller = sys._getframe(2)
-        caller_module = caller.f_globals.get('__name__','')
-        caller_name = caller.f_code.co_name
-        #if caller_module != 'distutils.dist' or caller_name!='run_commands':
-        #    _build.run(self)
-        #else:
-        # HARD CODED FOR NOW
-        prefix="/Users/christophe/Documents/Informatique/Python/Key1d/key1d/"
-        #
+        s=''.join(sys.argv)
+        l=re.search("--prefix=",s)
+        prefix=""
+        if l!=None:
+            s=s[l.end():]
+            l=re.search(" ",s)
+            if l!=None:
+                prefix=" --prefix="+s[:l.start()]
+	    else:
+		prefix=" --prefix="+s
         chdir("key1d")
         system("glibtoolize")
         system("aclocal")
         system("autoconf")
         system("automake --add-missing")
         system("autoconf")
-        system("./configure --prefix="+prefix)
+        system("./configure"+prefix)
+
+class build_(build):
+    def run(self):
+        chdir("key1d")
         system("make")
+
+class clean_(clean):
+    def run(self):
+	chdir("key1d")
+	system("make clean")
+
+class install_(install):
+    def run(self):
+	chdir("key1d")
+	system("make")
+	system("make install")
 
 occam1dcsem=Extension(
     'occam1dcsem',
@@ -45,6 +63,7 @@ setup(
 	long_description=open('README.txt').read(),
 	classifiers=["Programming Language :: Python",
 		     "Programming Language :: Fortran"],
-	cmdclass={'build': build_},
-    ext_modules=[occam1dcsem]
+	cmdclass={'build': build_,'configure': configure, 'clean': clean_,
+                     'install': install_},
+        ext_modules=[occam1dcsem]
 )
