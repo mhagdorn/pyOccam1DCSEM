@@ -16,7 +16,7 @@ class Dipole:
         self.flib.c_CallDipole1D(iTx,iFreq)
 
 def main():
-    libpath="/Users/christophe/Documents/Informatique/Python/Key1d/key1d/lib/"
+    libpath="/Users/ramananjaona/Desktop/temp/lib/"
     dpl=Dipole(libpath)
     dpl.callDipole1d()
 
