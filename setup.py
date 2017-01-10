@@ -4,7 +4,6 @@ from distutils.core import setup, Extension
 from distutils.command.build import build
 from distutils.command.install import install
 from distutils.command.clean import clean
-from distutils.sysconfig import get_python_lib
 from os import system,chdir
 import sys
 import re
@@ -39,7 +38,6 @@ class build_(build):
     def run(self):
         chdir("key1d")
         system("make")
-        chdir("..")
 
 class clean_(clean):
     def run(self):
@@ -51,14 +49,14 @@ class install_(install):
 	chdir("key1d")
 	system("make")
 	system("make install")
-	install
+        install.run
 
-occam1dcsem=Extension(
-    'occam1dcsem',
-    sources=[],
-    libraries=['liboccam1dcsem.0.dylib'],
-    library_dirs=['lib']
-)
+#occam1dcsem=Extension(
+#    'occam1dcsem',
+#    sources=[],
+#    libraries=['liboccam1dcsem.0.dylib'],
+#    library_dirs=['lib']
+#)
 
 setup(
 	name='Key1d',
@@ -72,6 +70,6 @@ setup(
 	classifiers=["Programming Language :: Python",
 		     "Programming Language :: Fortran"],
 	cmdclass={'build': build_,'configure': configure, 'clean': clean_,
-		      'install': install_},
-        ext_modules=[occam1dcsem]
+		      'install': install_}
+#        ext_modules=[occam1dcsem]
 )
