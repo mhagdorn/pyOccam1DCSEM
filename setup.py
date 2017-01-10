@@ -34,13 +34,9 @@ class configure(install):
 	system("echo "+sprefix+" >> temp1cfg")
 	system("mv temp1cfg setup.cfg")
 
-class build_(build):
-    def run(self):
-        chdir("key1d")
-        system("make")
-
 class clean_(clean):
     def run(self):
+        system("rm -rf build")
 	chdir("key1d")
 	system("make clean")
 
@@ -49,7 +45,6 @@ class install_(install):
 	chdir("key1d")
 	system("make")
 	system("make install")
-        install.run
 
 #occam1dcsem=Extension(
 #    'occam1dcsem',
@@ -69,7 +64,6 @@ setup(
 	long_description=open('README.txt').read(),
 	classifiers=["Programming Language :: Python",
 		     "Programming Language :: Fortran"],
-	cmdclass={'build': build_,'configure': configure, 'clean': clean_,
-		      'install': install_}
+	cmdclass={'configure': configure, 'clean': clean_,'lib': install_}
 #        ext_modules=[occam1dcsem]
 )
