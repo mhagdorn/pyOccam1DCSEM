@@ -6,6 +6,7 @@ from distutils.command.install import install
 from distutils.command.clean import clean
 from os import system,chdir
 import sys
+import platform
 import re
 from key1d import __version__
 
@@ -22,7 +23,10 @@ class configure(install):
 	    else:
 		prefix=" --prefix="+s
         chdir("key1d")
-        system("glibtoolize")
+	if platform.system()=="Linux":
+       	    system("libtoolize")
+	else:
+            system("glibtoolize")
         system("aclocal")
         system("autoconf")
         system("automake --add-missing")
