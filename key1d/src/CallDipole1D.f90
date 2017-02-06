@@ -264,7 +264,7 @@ end subroutine c_CallDipole1D
 !==============================================================================!
 !=============================================================! close_outfile
 !==============================================================================!
-subroutine c_close_outfile() bind(c, name='close_outfile')
+subroutine c_close_outfile() bind(c, name='c_close_outfile')
 
     use runfile
     use iso_c_binding, only: c_bool,c_double
