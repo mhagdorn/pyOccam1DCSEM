@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-    Copyright 2016 Isloux
+    Copyright: 2016-2017 Isloux Geophysics Ltd
     Author: Christophe Ramananjaona <isloux AT yahoo.co.uk>
 """
 
