@@ -57,6 +57,8 @@
     
     integer,parameter :: derivoutfileunit = 17
 
+    real(kind=8) :: t0
+
 contains
 
 subroutine c_initialiseDpl1D(linversion) bind(c, name="c_initialiseDpl1D")
@@ -183,7 +185,7 @@ subroutine c_CallDipole1D(iTx,iFreq, iRxlayer) bind(c, name="c_CallDipole1D")
     integer(c_int), intent(in) :: iTx, iFreq
     integer(c_int), intent(inout), optional :: iRxlayer
     integer               :: i,j
-    real(8)               :: t0, t1 ! timing variables
+    real(8)               ::  t1 ! timing variables
     
 
 !
@@ -257,6 +259,19 @@ subroutine c_CallDipole1D(iTx,iFreq, iRxlayer) bind(c, name="c_CallDipole1D")
             
 100    format(12(1x,e15.8)) 
 
+end subroutine c_CallDipole1D
+
+!==============================================================================!
+!=============================================================! close_outfile
+!==============================================================================!
+subroutine c_close_outfile() bind(c, name='close_outfile')
+
+    use runfile
+    use iso_c_binding, only: c_bool,c_double
+
+    implicit none
+
+    real(c_double) :: t1
 !
 ! Print out the run time:
 !
@@ -287,7 +302,7 @@ subroutine c_CallDipole1D(iTx,iFreq, iRxlayer) bind(c, name="c_CallDipole1D")
 !
 ! Hasta la vista baby
 !
-end subroutine c_CallDipole1D
+end subroutine c_close_outfile
 
   
 !==============================================================================!    
