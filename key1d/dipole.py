@@ -20,7 +20,8 @@ class Dipole:
 	else:
 	    suffix=".0.dylib"
         self.flib=cdll.LoadLibrary(libpath+"liboccam1dcsem"+suffix)
-        self.flib.c_initialiseDpl1D()
+	inverse=False
+        self.flib.c_initialiseDpl1D(inverse)
     
     def callDipole1d(self,iTx=1,iFreq=1):
         self.flib.c_CallDipole1D(iTx,iFreq)
