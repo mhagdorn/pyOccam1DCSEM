@@ -20,16 +20,23 @@ class Dipole:
 	else:
 	    suffix=".0.dylib"
         self.flib=cdll.LoadLibrary(libpath+"liboccam1dcsem"+suffix)
-	inverse=False
-        self.flib.c_initialiseDpl1D(inverse)
+        self.flib.c_initialiseDpl1D()
+	self.ntx=self.flib.c_get_nTx()
+	self.nfreq=self.flib.c_get_nFreq()
     
     def callDipole1d(self,iTx=1,iFreq=1):
         self.flib.c_CallDipole1D(iTx,iFreq)
 
+    def finalise(self):
+	self.flib.c_close_outfile()
+
 def main():
     libpath="/Users/ramananjaona/Desktop/temp/lib/"
     dpl=Dipole(libpath)
-    dpl.callDipole1d()
+    for ifreq in range(dpl.nfreq):
+        for itx in range(dpl.ntx):
+            dpl.callDipole1d(itx+1,ifreq+1)
+    dpl.finalise()
 
 if __name__=="__main__":
     main()

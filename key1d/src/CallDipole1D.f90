@@ -61,11 +61,11 @@
 
 contains
 
-subroutine c_initialiseDpl1D(linversion) bind(c, name="c_initialiseDpl1D")
+subroutine c_initialiseDpl1D(inversion) bind(c, name="c_initialiseDpl1D")
 
     use iso_c_binding, only: c_bool
 
-    logical(c_bool), intent(in) :: linversion
+    logical(c_bool), intent(in), optional :: inversion
     integer :: i
 
 !
@@ -73,6 +73,10 @@ subroutine c_initialiseDpl1D(linversion) bind(c, name="c_initialiseDpl1D")
 !
    call init_defaults_Dipole1D
    call init_defaults
+!
+! Set the inversio flag from the subroutine input
+!
+  if (present(inversion)) linversion=inversion
 
 ! DGM 10/2010 Allow command line arguments for the in & out filenames
 ! Note that the input filename allows an "Output FileName: xxxx" entry
@@ -267,11 +271,10 @@ end subroutine c_CallDipole1D
 subroutine c_close_outfile() bind(c, name='close_outfile')
 
     use runfile
-    use iso_c_binding, only: c_bool,c_double
 
     implicit none
 
-    real(c_double) :: t1
+    real(kind=8) :: t1
 !
 ! Print out the run time:
 !
