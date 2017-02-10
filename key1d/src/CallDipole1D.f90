@@ -120,7 +120,7 @@ end subroutine c_initialiseDpl1D
 !==============================================================================!
 subroutine init_defaults
 
-use dipole1d     ! Model parameters are passed in here, fields passed out here
+!use dipole1d     ! Model parameters are passed in here, fields passed out here
 !
 ! Specify some parameters required by Dipole1D:
 !
@@ -156,8 +156,6 @@ integer function c_get_nFreq() bind(c, name='c_get_nFreq')
 
 end function
 
-end module runfile
-
 !==============================================================================!
 !========================================================! Program CallDipole1D
 !==============================================================================!
@@ -180,8 +178,8 @@ end module runfile
 !==============================================================================!
 subroutine c_CallDipole1D(iTx,iFreq, iRxlayer) bind(c, name="c_CallDipole1D")
     
-    use dipole1d     ! Model parameters are passed in here, fields passed out here
-    use runfile      ! This stores the info read in from the RUNFILE
+!    use dipole1d     ! Model parameters are passed in here, fields passed out here
+!    use runfile      ! This stores the info read in from the RUNFILE
     use iso_c_binding, only: c_int
     
     implicit none
@@ -270,7 +268,7 @@ end subroutine c_CallDipole1D
 !==============================================================================!
 subroutine c_close_outfile() bind(c, name='c_close_outfile')
 
-    use runfile
+!    use runfile
 
     implicit none
 
@@ -362,8 +360,8 @@ end subroutine c_close_outfile
 !==============================================================================! 
       subroutine readrunfile_dipole1d       
  
-    use runfile
-    use dipole1D  
+!    use runfile
+!    use dipole1D  
       
     implicit none
     
@@ -709,8 +707,8 @@ end subroutine c_close_outfile
 !  kkey@ucsd.edu
 !
 !==============================================================================! 
-    use runfile
-    use dipole1D
+!    use runfile
+!    use dipole1D
     
     implicit none
     
@@ -774,8 +772,8 @@ end subroutine c_close_outfile
 !  kkey@ucsd.edu
 !
 !==============================================================================! 
-    use runfile
-    use dipole1D
+!    use runfile
+!    use dipole1D
     
     implicit none
     
@@ -917,4 +915,4 @@ end subroutine c_close_outfile
     
     end subroutine Lower    
     
-    
+end module runfile
