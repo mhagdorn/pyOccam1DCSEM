@@ -1,38 +1,61 @@
 #!/usr/bin/env python
 
 from distutils.core import setup, Extension
-from distutils.command.build import build as _build
 from distutils.command.build import build
+from distutils.command.install import install
+from distutils.command.clean import clean
 from os import system,chdir
 import sys
+import platform
+import re
 from key1d import __version__
 
-class build_(build):
+class configure(install):
     def run(self):
-        caller = sys._getframe(2)
-        caller_module = caller.f_globals.get('__name__','')
-        caller_name = caller.f_code.co_name
-        #if caller_module != 'distutils.dist' or caller_name!='run_commands':
-        #    _build.run(self)
-        #else:
-        # HARD CODED FOR NOW
-        prefix="/Users/christophe/Documents/Informatique/Python/Key1d/key1d/"
-        #
+        s=''.join(sys.argv)
+        l=re.search("--prefix=",s)
+        prefix=""
+        if l!=None:
+            s=s[l.end():]
+            l=re.search(" ",s)
+            if l!=None:
+                prefix=" --prefix="+s[:l.start()]
+	    else:
+		prefix=" --prefix="+s
         chdir("key1d")
-        system("glibtoolize")
+	if platform.system()=="Linux":
+       	    system("libtoolize")
+	else:
+            system("glibtoolize")
         system("aclocal")
         system("autoconf")
         system("automake --add-missing")
         system("autoconf")
-        system("./configure --prefix="+prefix)
-        system("make")
+        system("./configure"+prefix)
+	chdir("..")
+	system("grep -v 'prefix' setup.cfg > temp1cfg")
+	sprefix="prefix="+s
+	system("echo "+sprefix+" >> temp1cfg")
+	system("mv temp1cfg setup.cfg")
 
-occam1dcsem=Extension(
-    'occam1dcsem',
-    sources=[],
-    libraries=['liboccam1dcsem.0.dylib'],
-    library_dirs=['/Users/christophe/Documents/Informatique/Python/Key1d/key1d/lib']
-)
+class clean_(clean):
+    def run(self):
+        system("rm -rf build")
+	chdir("key1d")
+	system("make clean")
+
+class install_(install):
+    def run(self):
+	chdir("key1d")
+	system("make")
+	system("make install")
+
+#occam1dcsem=Extension(
+#    'occam1dcsem',
+#    sources=[],
+#    libraries=['liboccam1dcsem.0.dylib'],
+#    library_dirs=['lib']
+#)
 
 setup(
 	name='Key1d',
@@ -45,6 +68,6 @@ setup(
 	long_description=open('README.txt').read(),
 	classifiers=["Programming Language :: Python",
 		     "Programming Language :: Fortran"],
-	cmdclass={'build': build_},
-    ext_modules=[occam1dcsem]
+	cmdclass={'configure': configure, 'clean': clean_,'lib': install_}
+#        ext_modules=[occam1dcsem]
 )

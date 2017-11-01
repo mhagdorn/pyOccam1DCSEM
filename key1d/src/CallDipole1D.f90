@@ -1,10 +1,10 @@
 !-----------------------------------------------------------------------------
 ! C interface for Dipole1D
 !-----------------------------------------------------------------------------
-! (c) Isloux, 2016
+! (c) Isloux Geophysics Ltd, 2016-2017
 ! Authors: Kerry Key <kkey AT ucsd.edu>
 !          Christophe Ramananjaona <isloux AT yahoo.co.uk>
-! Date: 19 April 2016
+! Date: 06 February 2017
 !-----------------------------------------------------------------------------
 
 !==============================================================================!
@@ -57,13 +57,15 @@
     
     integer,parameter :: derivoutfileunit = 17
 
+    real(kind=8) :: t0
+
 contains
 
-subroutine c_initialiseDpl1D(linversion) bind(c, name="c_initialiseDpl1D")
+subroutine c_initialiseDpl1D(inversion) bind(c, name="c_initialiseDpl1D")
 
     use iso_c_binding, only: c_bool
 
-    logical(c_bool), intent(in) :: linversion
+    logical(c_bool), intent(in), optional :: inversion
     integer :: i
 
 !
@@ -71,6 +73,10 @@ subroutine c_initialiseDpl1D(linversion) bind(c, name="c_initialiseDpl1D")
 !
    call init_defaults_Dipole1D
    call init_defaults
+!
+! Set the inversio flag from the subroutine input
+!
+  if (present(inversion)) linversion=inversion
 
 ! DGM 10/2010 Allow command line arguments for the in & out filenames
 ! Note that the input filename allows an "Output FileName: xxxx" entry
@@ -114,7 +120,7 @@ end subroutine c_initialiseDpl1D
 !==============================================================================!
 subroutine init_defaults
 
-use dipole1d     ! Model parameters are passed in here, fields passed out here
+!use dipole1d     ! Model parameters are passed in here, fields passed out here
 !
 ! Specify some parameters required by Dipole1D:
 !
@@ -130,7 +136,25 @@ linversion      = .false. ! Compute Derivatives with respect to sigma(layers)
 
 end subroutine init_defaults
 
-end module runfile
+!==============================================================================!
+!===============================================================! get_nTx
+!==============================================================================!
+integer function c_get_nTx() bind(c, name='c_get_nTx')
+
+    c_get_nTx=nTx
+    return
+
+end function
+
+!==============================================================================!
+!===============================================================! get_nFreq
+!==============================================================================!
+integer function c_get_nFreq() bind(c, name='c_get_nFreq')
+
+    c_get_nFreq=nFreq
+    return
+
+end function
 
 !==============================================================================!
 !========================================================! Program CallDipole1D
@@ -154,8 +178,8 @@ end module runfile
 !==============================================================================!
 subroutine c_CallDipole1D(iTx,iFreq, iRxlayer) bind(c, name="c_CallDipole1D")
     
-    use dipole1d     ! Model parameters are passed in here, fields passed out here
-    use runfile      ! This stores the info read in from the RUNFILE
+!    use dipole1d     ! Model parameters are passed in here, fields passed out here
+!    use runfile      ! This stores the info read in from the RUNFILE
     use iso_c_binding, only: c_int
     
     implicit none
@@ -163,7 +187,7 @@ subroutine c_CallDipole1D(iTx,iFreq, iRxlayer) bind(c, name="c_CallDipole1D")
     integer(c_int), intent(in) :: iTx, iFreq
     integer(c_int), intent(inout), optional :: iRxlayer
     integer               :: i,j
-    real(8)               :: t0, t1 ! timing variables
+    real(8)               ::  t1 ! timing variables
     
 
 !
@@ -237,6 +261,18 @@ subroutine c_CallDipole1D(iTx,iFreq, iRxlayer) bind(c, name="c_CallDipole1D")
             
 100    format(12(1x,e15.8)) 
 
+end subroutine c_CallDipole1D
+
+!==============================================================================!
+!=============================================================! close_outfile
+!==============================================================================!
+subroutine c_close_outfile() bind(c, name='c_close_outfile')
+
+!    use runfile
+
+    implicit none
+
+    real(kind=8) :: t1
 !
 ! Print out the run time:
 !
@@ -267,7 +303,7 @@ subroutine c_CallDipole1D(iTx,iFreq, iRxlayer) bind(c, name="c_CallDipole1D")
 !
 ! Hasta la vista baby
 !
-end subroutine c_CallDipole1D
+end subroutine c_close_outfile
 
   
 !==============================================================================!    
@@ -324,8 +360,8 @@ end subroutine c_CallDipole1D
 !==============================================================================! 
       subroutine readrunfile_dipole1d       
  
-    use runfile
-    use dipole1D  
+!    use runfile
+!    use dipole1D  
       
     implicit none
     
@@ -671,8 +707,8 @@ end subroutine c_CallDipole1D
 !  kkey@ucsd.edu
 !
 !==============================================================================! 
-    use runfile
-    use dipole1D
+!    use runfile
+!    use dipole1D
     
     implicit none
     
@@ -736,8 +772,8 @@ end subroutine c_CallDipole1D
 !  kkey@ucsd.edu
 !
 !==============================================================================! 
-    use runfile
-    use dipole1D
+!    use runfile
+!    use dipole1D
     
     implicit none
     
@@ -879,4 +915,4 @@ end subroutine c_CallDipole1D
     
     end subroutine Lower    
     
-    
+end module runfile
