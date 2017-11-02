@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-    Copyright: 2016-2017 Isloux Geophysics Ltd
+    Copyright: 2016-2017 Isloux Geophysics Ltd, Voudenay Geophysics Ltd
     Author: Christophe Ramananjaona <isloux AT yahoo.co.uk>
 """
 
@@ -11,7 +11,7 @@ import platform
 class Dipole:
     
     def __init__(self,libpath="/usr/local/lib/"):
-	package="key1d"
+	package="pyoccam1dcsem"
 	pyv="python"+str(version_info[0])+"."+str(version_info[1])
 	if platform.system()=="Linux":
 	# Disabled for now

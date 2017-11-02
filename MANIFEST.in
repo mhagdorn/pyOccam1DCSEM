@@ -1,4 +1,4 @@
 include LICENSE
-recursive-include key1d *.am
-recursive-include key1d/src *.f90
-include key1d/configure.ac
+recursive-include pyoccam1dcsem *.am
+recursive-include pyoccam1dcsem/src *.f90
+include pyoccam1dcsem/configure.ac

@@ -8,7 +8,7 @@ from os import system,chdir
 import sys
 import platform
 import re
-from key1d import __version__
+from pyoccam1dcsem import __version__
 
 class configure(install):
     def run(self):
@@ -22,7 +22,7 @@ class configure(install):
                 prefix=" --prefix="+s[:l.start()]
 	    else:
 		prefix=" --prefix="+s
-        chdir("key1d")
+        chdir("pyoccam1dcsem")
 	if platform.system()=="Linux":
        	    system("libtoolize")
 	else:
@@ -41,12 +41,12 @@ class configure(install):
 class clean_(clean):
     def run(self):
         system("rm -rf build")
-	chdir("key1d")
+	chdir("pyoccam1dcsem")
 	system("make clean")
 
 class install_(install):
     def run(self):
-	chdir("key1d")
+	chdir("pyoccam1dcsem")
 	system("make")
 	system("make install")
 
@@ -58,12 +58,12 @@ class install_(install):
 #)
 
 setup(
-	name='Key1d',
+	name='pyOccam1DCSEM',
 	version=__version__,
-	packages=['key1d'],
+	packages=['pyoccam1dcsem'],
 	author='Kerry Key, Christophe Ramananjaona',
 	author_email='isloux AT yahoo.co.uk',
-	url='https://github.com/isloux/Key1d',
+	url='https://github.com/isloux/pyOccam1DCSEM',
 	license='GNU General Public License v3',
 	long_description=open('README.txt').read(),
 	classifiers=["Programming Language :: Python",

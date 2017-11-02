@@ -1,7 +1,11 @@
 #!/usr/bin/env python
+"""
+    Copyright: 2017 Voudenay Geophysics Ltd
+    Author: Christophe Ramananjaona <isloux AT yahoo.co.uk>
+"""
 
 import occamfile as occmfl
-from sys import argv,exit
+from sys import argv
 from os.path import isfile
 
 if len(argv)<2:

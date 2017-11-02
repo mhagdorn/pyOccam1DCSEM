@@ -1,9 +1,12 @@
 #!/usr/bin/env python
+"""
+    Copyright: 2017 Voudenay Geophysics Ltd
+    Author: Christophe Ramananjaona <isloux AT yahoo.co.uk>
+"""
 
 import pandas as pd
 from numpy import zeros,sqrt,log10
 import matplotlib.pyplot as plt
-from sys import exit
 
 def removelines(l):
 	c=['0']
