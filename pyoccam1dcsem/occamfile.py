@@ -7,7 +7,6 @@
 import pandas as pd
 from numpy import zeros,sqrt,log10
 import matplotlib.pyplot as plt
-import re
 
 def removelines(l):
     c=['0']
@@ -85,8 +84,6 @@ class OccamFile:
         for i in range(nlines):
             for j in range(ncol):
                 if floatdata:
-                    #if 'd' in a[i][j]:
-                    #    a[i][j]=re.sub('d','e',a[i][j])
                     posa[i,j]=float(a[i][j])
                 else:
                     posa[i,j]=int(a[i][j])
