@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from distutils.core import setup, Extension
+from distutils.core import setup
 from distutils.command.build import build
 from distutils.command.install import install
 from distutils.command.clean import clean
