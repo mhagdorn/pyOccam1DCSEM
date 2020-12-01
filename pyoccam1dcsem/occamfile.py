@@ -7,35 +7,62 @@
 import pandas as pd
 from numpy import zeros,sqrt,log10
 import matplotlib.pyplot as plt
+import re
 
 def removelines(l):
     c=['0']
     while ''.join(c)[0]!='#':
         c=l.pop(0)
-        if len(c)==0: c=['0']
-            l=[c]+l
-    return l
+        if len(c)==0:
+            c=['0']
+    return [c]+l
+
+def removecol(l):
+    o=[]
+    for i in l:
+        if len(i)>0:
+            j=0
+            while i[j]!='!':
+                if j<len(i)-1:
+                    j+=1
+                    f=j
+                else:
+                    f=j+1
+                    break
+            o.append(i[:f])
+    return o
 
 class OccamFile:
 
     def __init__(self,filename="RUNFILE"):
-        a=[ line.split() for line in file(filename) ]
+        with open(filename,"r") as f:
+            a=[ line.split() for line in f.readlines() ]
+        # Transmistter positions
         # Drop first lines
         a=removelines(a)
+        a=removecol(a)
         self.transmitpos=self.__dataframe(a)
         self.transmitpos['rx']=self.transmitpos.index+1
         self.transmitpos.set_index('Y',inplace=True)
         # Drop the no longer necessary lines
         a=removelines(a)
+        # Frequencies
         nfreq=int(a.pop(0)[2])
         self.freql=[]
         for i in range(nfreq):
             self.freql.append(a.pop(0)[0])
-            # Drop the no longer necessary lines
+        # Drop the no longer necessary lines
+        a=removelines(a)
+        a.pop(0)
+        # Do not read the layers
+        #
+        # Drop the no longer necessary lines
+        a=removelines(a)
+        self.recpos=self.__dataframe(a,colheader=False)
+        # Drop the no longer necessary lines
+        if a.pop(0)[0]=='#':
             a=removelines(a)
-            self.recpos=self.__dataframe(a,colheader=False)
-            # Drop the no longer necessary lines
-            a=removelines(a)
+            # CSEM data
             self.datadf=self.__dataframe(a)
             self.types=self.datadf['TYPE'].unique()
             self.nfreq=self.datadf['FREQ#'].nunique()
@@ -46,22 +73,25 @@ class OccamFile:
         nlines=int(a.pop(0)[2])
         if colheader:
             colnames=[ str(i) for i in a.pop(0) ]
-            colnames.pop(0)
+            if colnames[0]=='#':
+                colnames.pop(0)
         else:
             colnames=['X','Y','Z']
-            ncol=len(colnames)
-            if floatdata:
-                posa=zeros((nlines,ncol),dtype='float')
-            else:
-                posa=zeros((nlines,ncol),dtype='int')
-                for i in range(nlines):
-                    for j in range(ncol):
-                        if floatdata:
-                            posa[i,j]=float(a[i][j])
-                        else:
-                            posa[i,j]=int(a[i][j])
+        ncol=len(colnames)
+        if floatdata:
+            posa=zeros((nlines,ncol),dtype='float')
+        else:
+            posa=zeros((nlines,ncol),dtype='int')
+        for i in range(nlines):
+            for j in range(ncol):
+                if floatdata:
+                    #if 'd' in a[i][j]:
+                    #    a[i][j]=re.sub('d','e',a[i][j])
+                    posa[i,j]=float(a[i][j])
+                else:
+                    posa[i,j]=int(a[i][j])
         return pd.DataFrame(posa,columns=colnames)
-				
+
     def compAmplitude(self):
         if len(self.types)>2:
             raise Warning("There are more than two data types.")
@@ -81,7 +111,7 @@ class OccamFile:
 
     def __fillinfields(self,row):
         if row['TYPE']==self.types[0]:
-    	    row['E1']=row['DATA']
+            row['E1']=row['DATA']
             row['DeltaE1']=row['SD_ERROR']
         else:
             row['E2']=row['DATA']
@@ -96,7 +126,7 @@ class OccamFile:
 
     def __DeltalogAmp(self,row):
         return 2.0*(abs(row['E1'])*row['DeltaE1']+abs(row['E2'])*row['DeltaE2'])/row['squaredAmp']
-	
+
     def plotlogAmp(self,name):
         self.eedf.set_index('TX#',inplace=True)
         for i in range(self.nfreq):

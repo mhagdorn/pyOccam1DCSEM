@@ -197,7 +197,6 @@ subroutine c_CallDipole1D(iTx,iFreq, iRxlayer) bind(c, name="c_CallDipole1D")
    write(*,*) ' '
    call get_time_offset(0d0,t0)  ! get_time_offset should work on all F90/95 compilers
    
-   
    write(*,'(a24,i6)') 'Transmitter #:',iTx    
 !
 ! Assign Tx parameters:

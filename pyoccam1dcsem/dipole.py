@@ -9,11 +9,11 @@ from sys import version_info
 from os import environ
 import platform
 import re
+from .occamfile import OccamFile
 
 class Dipole:
     
     def __init__(self,libpath="/usr/local/lib"):
-        print(libpath)
         package="pyoccam1dcsem"
         pyv="python"+str(version_info[0])+"."+str(version_info[1])
         if platform.system()=="Linux":
@@ -36,6 +36,7 @@ class Dipole:
 def main():
     l=re.search(":",environ['LD_LIBRARY_PATH'])
     libpath=environ['LD_LIBRARY_PATH'][:l.end()-1]
+    ccmfl=OccamFile("RUNFILE")
     dpl=Dipole(libpath)
     for ifreq in range(dpl.nfreq):
         for itx in range(dpl.ntx):
