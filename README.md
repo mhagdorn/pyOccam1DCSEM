@@ -3,9 +3,16 @@
 (forward modelling only)
 
 Installation:
-> python3 setup.py configure --prefix=<the_installation_path>
+> python3 setup.py configure --prefix=<lib_installation_path>
 
 > python3 setup.py lib
 
+> pip3 intall .
+
 Clean build:
 > python3 setup.py clean
+
+Usage:
+> export LD_LIBRARY_PATH="<lib_installation_path>:LD_LIBRARY_PATH"
+
+> python3 -m pyoccam1dcsem.dipole
