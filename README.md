@@ -7,7 +7,7 @@ Installation:
 
 > python3 setup.py lib
 
-> pip3 intall .
+> pip3 install .
 
 Clean build:
 > python3 setup.py clean
