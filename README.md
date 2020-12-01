@@ -4,4 +4,5 @@
 
 Installation:
 > python3 setup.py configure --prefix=<the_installation_path>
+
 > python3 setup.py lib
