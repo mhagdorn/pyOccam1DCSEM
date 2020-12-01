@@ -1,5 +1,6 @@
 # pyOccam1DCSEM
 1D electromagnetic dipole modelling using Python module distribution of Kerry Key's Occam 1D CSEM code
+(forward modelling only)
 
 Installation:
 > python3 setup.py configure --prefix=<the_installation_path>
