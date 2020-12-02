@@ -184,7 +184,7 @@ subroutine c_CallDipole1D(iTx,iFreq, iRxlayer) bind(c, name="c_CallDipole1D")
     
     implicit none
     
-    integer(c_int), intent(in) :: iTx, iFreq
+    integer(c_int), intent(in), value :: iTx, iFreq
     integer(c_int), intent(inout), optional :: iRxlayer
     integer               :: i,j
     real(8)               ::  t1 ! timing variables

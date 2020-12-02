@@ -4,7 +4,7 @@
     Author: Christophe Ramananjaona <isloux AT yahoo.co.uk>
 """
 
-from ctypes import cdll
+from ctypes import cdll,c_int
 from sys import version_info
 from os import environ
 import platform
@@ -28,7 +28,7 @@ class Dipole:
         self.nfreq=self.flib.c_get_nFreq()
     
     def callDipole1d(self,iTx=1,iFreq=1):
-        self.flib.c_CallDipole1D(iTx,iFreq)
+        self.flib.c_CallDipole1D(c_int(iTx),c_int(iFreq))
 
     def finalise(self):
         self.flib.c_close_outfile()
