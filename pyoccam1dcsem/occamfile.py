@@ -135,7 +135,7 @@ class OccamFile:
             plt.title(name)
             plt.show()
 
-def generate_runfile(source,freq,layers,rec,name,air_resistivity=1.0e-12):
+def generate_runfile(source,freq,layers,rec,name,air_resistivity=1.0e12):
     with open("RUNFILE","w") as outfile:
         outfile.write("Version: pyOccam1DCSEM {}\n".format(__version__))
         outfile.write("Output Filename: {}.csem\n".format(name))
