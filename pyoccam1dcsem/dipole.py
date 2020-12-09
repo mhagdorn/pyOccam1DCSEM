@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-    Copyright: 2016-2017 Isloux Geophysics Ltd, Voudenay Geophysics Ltd
+    Copyright: 2016-2020 Isloux Geophysics Ltd, Voudenay Geophysics Ltd
     Author: Christophe Ramananjaona <isloux AT yahoo.co.uk>
 """
 

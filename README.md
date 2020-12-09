@@ -15,4 +15,10 @@ Clean build:
 Usage:
 > export LD_LIBRARY_PATH="<lib_installation_path>:LD_LIBRARY_PATH"
 
+> python3 -m pyoccam1dcsem.occamfile
+
+generates a simple RUNFILE
+
 > python3 -m pyoccam1dcsem.dipole
+
+runs forward model using RUNFILE

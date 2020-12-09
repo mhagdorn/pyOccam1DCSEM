@@ -1,12 +1,14 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
-    Copyright: 2017 Voudenay Geophysics Ltd
+    Copyright: 2017-2020 Voudenay Geophysics Ltd
     Author: Christophe Ramananjaona <isloux AT yahoo.co.uk>
 """
 
 import pandas as pd
 from numpy import zeros,sqrt,log10
 import matplotlib.pyplot as plt
+import re
+from .__init__ import __version__
 
 def removelines(l):
     c=['0']
@@ -132,3 +134,33 @@ class OccamFile:
             plt.legend(self.freql)
             plt.title(name)
             plt.show()
+
+def generate_runfile(source,freq,layers,rec,name,air_resistivity=1.0e-12):
+    with open("RUNFILE","w") as outfile:
+        outfile.write("Version: pyOccam1DCSEM {}\n".format(__version__))
+        outfile.write("Output Filename: {}.csem\n".format(name))
+        outfile.write("CompDerivatives: no\n")
+        outfile.write("# TRANSMITTERS: {}\n".format(len(source)))
+        outfile.write("X\tY\tZ\tROTATION\tDIP\n")
+        for i in source:
+            outfile.write("{}\t{}\t{}\t{}\t{}\n".format(i['X'],i['Y'],i['Z'], \
+                    i['ROTATION'],i['DIP']))
+        outfile.write("# FREQUENCIES: {}\n".format(len(freq)))
+        for i in freq:
+            outfile.write("{}\n".format(i))
+        outfile.write("# LAYERS: {}\n".format(len(layers)+1))
+        str_air_rho=re.sub("e","d",str(air_resistivity))
+        outfile.write("-100000\t{}\t! The top depth of the first layer is not used in the code. In this example the first layer is air (1d12 ohm-m)\n".format(str_air_rho))
+        for i in layers:
+            outfile.write("{}\t{}\n".format(i['top'],i['rho']))
+        outfile.write("# RECEIVERS: {}\n".format(len(rec)))
+        for i in rec:
+            outfile.write("{}\t{}\t{}\n".format(i['x'],i['y'],i['z']))
+
+if __name__=="__main__":
+    source=[{'X':0.0,'Y':0.0,'Z':1000.0,'ROTATION':90.0,'DIP':0.0}]
+    nu=[0.01,0.02,0.05,0.1,0.2,0.5,1.0,2.0,5.0,10.0]
+    layers=[{'top':0.0,'rho':5.0}]
+    rec=[{'x':0.0,'y':0.0,'z':0.0}]
+    name="helloworld"
+    generate_runfile(source,nu,layers,rec,name)
