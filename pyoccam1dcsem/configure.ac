@@ -9,6 +9,7 @@ AM_INIT_AUTOMAKE
 AC_PROG_FC
 AC_PROG_CXX
 AC_CONFIG_MACRO_DIRS([m4])
+AM_CONDITIONAL([X86_64],[test $(uname -p)=="x86_64"])
 
 # Checks for programs.
 

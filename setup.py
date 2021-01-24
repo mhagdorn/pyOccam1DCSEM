@@ -37,12 +37,17 @@ class configure(install):
         sprefix="prefix="+s
         system("echo "+sprefix+" >> temp1cfg")
         system("mv temp1cfg setup.cfg")
+        system("tail -1 setup.cfg | cut -d= -f2 > pyoccam1dcsem/prefix.foo")
+        prefix=open("pyoccam1dcsem/prefix.foo","r").readlines()
+        with open("pyoccam1dcsem/prefix.py","w") as fout:
+            fout.write("prefix=\"{}\"\n".format(prefix[0].rstrip()))
 
 class clean_(clean):
     def run(self):
         system("rm -rf build")
         chdir("pyoccam1dcsem")
         system("make clean")
+        system("rm -f prefix.*")
 
 class install_(install):
     def run(self):
@@ -53,7 +58,7 @@ setup(
     name='pyOccam1DCSEM',
     version=__version__,
     packages=['pyoccam1dcsem'],
-    author='Kerry Key, Christophe Ramananjaona',
+    author='Christophe Ramananjaona',
     author_email='isloux AT yahoo.co.uk',
     url='https://github.com/isloux/pyOccam1DCSEM',
     license='GNU General Public License v3',

@@ -10,6 +10,7 @@ from os import environ
 import platform
 import re
 from .occamfile import OccamFile
+from .prefix import prefix
 
 class Dipole:
     
@@ -34,8 +35,7 @@ class Dipole:
         self.flib.c_close_outfile()
 
 def main():
-    l=re.search(":",environ['LD_LIBRARY_PATH'])
-    libpath=environ['LD_LIBRARY_PATH'][:l.end()-1]
+    libpath=prefix+"/lib"
     ccmfl=OccamFile("RUNFILE")
     dpl=Dipole(libpath)
     for ifreq in range(dpl.nfreq):
