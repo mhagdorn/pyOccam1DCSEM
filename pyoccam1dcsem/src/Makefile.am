@@ -1,7 +1,5 @@
 if X86_64
-	# Fortran 90 flags
 	AM_FCFLAGS = -m64
-	# C++ flags
 	AM_CXXFLAGS = -m64
 endif
 # Linker flags

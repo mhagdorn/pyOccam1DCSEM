@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 """
     Copyright: 2017-2020 Voudenay Geophysics Ltd
+    Copyright: 2021 Christophe Ramananjaona
     Author: Christophe Ramananjaona <isloux AT yahoo.co.uk>
+
+    Module containing the class definition for the OccamFile class.
+    The class is used to read and write files in the 'Occam' format
 """
 
 import pandas as pd
@@ -11,14 +15,23 @@ import re
 from .__init__ import __version__
 
 def removelines(l):
+    """! Remove the commented lines startying with #. """
     c=['0']
     while ''.join(c)[0]!='#':
         c=l.pop(0)
         if len(c)==0:
             c=['0']
-    return [c]+l
+        elif c[0]=="Dipole1D_1.1":
+            c=[]
+            l.pop(0)
+            break
+    if len(c)==0:
+        return l
+    else:
+        return [c]+l
 
 def removecol(l):
+    """! Remove the comments after the !. """
     o=[]
     for i in l:
         if len(i)>0:
@@ -36,6 +49,9 @@ def removecol(l):
 class OccamFile:
 
     def __init__(self,filename="RUNFILE"):
+        """! Constructor.
+        filename Occam format input filename
+        """
         with open(filename,"r") as f:
             a=[ line.split() for line in f.readlines() ]
         # Transmistter positions
@@ -48,7 +64,11 @@ class OccamFile:
         # Drop the no longer necessary lines
         a=removelines(a)
         # Frequencies
-        nfreq=int(a.pop(0)[2])
+        inputline=a.pop(0)
+        if len(inputline)==1:
+            nfreq=int(inputline[0])
+        else:
+            nfreq=int(inputline[2])
         self.freql=[]
         for i in range(nfreq):
             self.freql.append(a.pop(0)[0])
@@ -71,7 +91,16 @@ class OccamFile:
             self.nrec=self.datadf['RX#'].nunique()
 
     def __dataframe(self,a,colheader=True,floatdata=True):
-        nlines=int(a.pop(0)[2])
+        """! Creates a dataframe from rows and columns of data.
+        a List of list containing the data
+        colheader Indicatess if the input list contains headers
+        floatdata Indicates if the input data are of type float
+        """
+        inputline=a.pop(0)
+        if len(inputline)==1:
+            nlines=int(inputline[0])
+        else:
+            nlines=int(inputline[2])
         if colheader:
             colnames=[ str(i) for i in a.pop(0) ]
             if colnames[0]=='#':
@@ -92,6 +121,7 @@ class OccamFile:
         return pd.DataFrame(posa,columns=colnames)
 
     def compAmplitude(self):
+        """! Copmutes amplitudes from real and impaginary. """
         if len(self.types)>2:
             raise Warning("There are more than two data types.")
         self.datadf['E1']=0.0
@@ -118,15 +148,21 @@ class OccamFile:
         return row
 
     def __Ampsquared(self,row):
+        """! Copmutes the squared amplitude from the real and imaginary. """
         return row['E1']**2+row['E2']**2
 
     def __logAmp(self,row):
+        """! Copmutes the log10 of the amplitude from the squared amplitude. """
         return log10(sqrt(row['squaredAmp']))
 
     def __DeltalogAmp(self,row):
+        """! Copmutes the standard deviation of the log10 of the amplitude. """
         return 2.0*(abs(row['E1'])*row['DeltaE1']+abs(row['E2'])*row['DeltaE2'])/row['squaredAmp']
 
     def plotlogAmp(self,name):
+        """! Plots the log10 of the amplitude. 
+        name Title of the plot
+        """
         self.eedf.set_index('TX#',inplace=True)
         for i in range(self.nfreq):
             pltdata=self.transmitpos['rx'].map(self.eedf[self.eedf['FREQ#']==i+1]['logAmp']).dropna()
@@ -136,6 +172,14 @@ class OccamFile:
             plt.show()
 
 def generate_runfile(source,freq,layers,rec,name,air_resistivity=1.0e12):
+    """! Generates a 'Occam' input file from given parameters:
+    source  list of dictionaries providing the source positions and orientations
+    freq    list of frequencies
+    layers  list of dictionaries describing the layers
+    rec     list of dictionaries providing the receiver positions
+    name    string providing the name of the created file
+    air_resistivity optional air resistivity value in ohm.m
+    """
     with open("RUNFILE","w") as outfile:
         outfile.write("Version: pyOccam1DCSEM {}\n".format(__version__))
         outfile.write("Output Filename: {}.csem\n".format(name))
