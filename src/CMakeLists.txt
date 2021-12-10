@@ -13,4 +13,6 @@ install (TARGETS occam1dcsem
 
 # install the mod files
 install (DIRECTORY ${CMAKE_Fortran_MODULE_DIRECTORY}/
-         DESTINATION ${MOD_INSTALL_DIR})
+  DESTINATION ${MOD_INSTALL_DIR})
+# install the header
+install (FILES CallDipole1D.h DESTINATION ${INCLUDE_INSTALL_DIR})
