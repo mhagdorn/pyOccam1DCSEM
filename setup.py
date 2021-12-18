@@ -15,5 +15,11 @@ setup(
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Fortran"],
-    cmake_args=['-DCMAKE_VERBOSE_MAKEFILE:BOOL=ON'],
+    setup_requires=[
+        'scikit-build',
+        'cython',
+        ],
+    install_requires=[
+        'pandas',
+        ],
 )
