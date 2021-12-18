@@ -12,7 +12,7 @@ import pandas as pd
 from numpy import zeros,sqrt,log10
 import matplotlib.pyplot as plt
 import re
-from .__init__ import __version__
+from .version import __version__
 
 def removelines(l):
     """! Remove the commented lines startying with #. """
