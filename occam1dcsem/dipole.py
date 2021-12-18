@@ -37,16 +37,3 @@ class Dipole:
     def __del__(self):
         """! Destructor for the object Dipole """
         c_close_outfile()
-
-#def main():
-#    """! Default test main program for the module running from the default RUNFILE """
-#    libpath=prefix+"/lib"
-#    ccmfl=OccamFile("RUNFILE")
-#    dpl=Dipole(libpath)
-#    for ifreq in range(dpl.nfreq):
-#        for itx in range(dpl.ntx):
-#            dpl.callDipole1d(itx+1,ifreq+1)
-#    dpl.finalise()
-
-#if __name__=="__main__":
-#    main()
