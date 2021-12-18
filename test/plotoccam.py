@@ -4,7 +4,7 @@
     Author: Christophe Ramananjaona <isloux AT yahoo.co.uk>
 """
 
-from pyoccam1dcsem import occamfile as occmfl
+from occam1dcsem import occamfile as occmfl
 from sys import argv
 from os.path import isfile
 
