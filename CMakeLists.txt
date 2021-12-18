@@ -1,10 +1,13 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 3.11.0)
 project(occam1dcsem)
 set (PROJECT_VERSION_MAJOR 7)
 set (PROJECT_VERSION_MINOR 3)
 set (PROJECT_VERSION_PATCH 0)
 set (PROJECT_BUGREPORT "isloux@yahoo.co.uk")
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
+
+find_package(PythonExtensions REQUIRED)
+find_package(Cython REQUIRED)
 
 enable_language (Fortran)
 
@@ -30,3 +33,4 @@ set (MOD_INSTALL_DIR ${INCLUDE_INSTALL_DIR}/${PROJECT_NAME} CACHE PATH
 
 
 add_subdirectory (src)
+add_subdirectory (occam1dcsem)
